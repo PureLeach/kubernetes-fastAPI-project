@@ -4,7 +4,16 @@ version = "0.1.0"
 description = "Сервис хранилище JSON-объектов, предназначенный для работы в облачной среде Kubernetes"
 authors = ["barannikovMU <barannikov.mu@gmail.com>"]
 readme = "README.md"
-packages = [{include = "kubernetes_fastapi_test_task"}]
+packages = [{include = "storage_service"}]
+
+
+[virtualenvs]
+in-project = true
+path = ".venv"
+
+
+[tool.poetry.scripts]
+start = "storage_service.main:start"
 
 
 [tool.poetry.dependencies]
@@ -17,6 +26,8 @@ environs = "^9.5.0"
 [tool.poetry.group.dev.dependencies]
 black = "*"
 ruff = "*"
+mypy = "*"
+pre-commit = "*"
 
 
 [tool.ruff]
@@ -35,13 +46,32 @@ select = [
     "UP",  # pyupgrade  
     "S",   # bandit
 ]
+ignore = [
+    "E501",  # disabled control on the length of the string
+    "Q000",  # single quotes are allowed
+    "S104",  # possible binding to all interfaces
+]
+
+
+[tool.black]
+line-length = 120
+skip-string-normalization = '1'
+
+
+[tool.mypy]
+python_version = '3.11'
+show_error_codes = true
+plugins = ['pydantic.mypy']
+exclude = [
+    'test',
+    'conftest',
+]
+
+
+[tool.pydantic-mypy]
+warn_untyped_fields = true
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-
-[virtualenvs]
-in-project = true
-path = ".venv"
