@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "kubernetes-fastapi-test-task"
+version = "0.1.0"
+description = "Сервис хранилище JSON-объектов, предназначенный для работы в облачной среде Kubernetes"
+authors = ["barannikovMU <barannikov.mu@gmail.com>"]
+readme = "README.md"
+packages = [{include = "kubernetes_fastapi_test_task"}]
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "0.101.0"
+uvicorn = "0.23.2"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+ruff = "*"
+
+
+[tool.ruff]
+select = [
+    "E",   # pycodestyle error
+    "W",   # pycodestyle warning
+    "F",   # pyflakes
+    "A",   # flakes8-builtins
+    "COM", # flakes8-commas
+    "C4",  # flake8-comprehensions
+    "Q",   # flake8-quotes
+    "SIM", # flake8-simplify
+    "PTH", # flake8-use-pathlib
+    "I",   # isort
+    "N",   # pep8 naming
+    "UP",  # pyupgrade  
+    "S",   # bandit
+]
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[virtualenvs]
+in-project = true
+path = ".venv"
