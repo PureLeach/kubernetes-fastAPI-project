@@ -11,6 +11,7 @@ packages = [{include = "kubernetes_fastapi_test_task"}]
 python = "^3.11"
 fastapi = "0.101.0"
 uvicorn = "0.23.2"
+environs = "^9.5.0"
 
 
 [tool.poetry.group.dev.dependencies]
