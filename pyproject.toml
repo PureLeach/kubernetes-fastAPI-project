@@ -24,6 +24,7 @@ environs = "^9.5.0"
 structlog = "^23.1.0"
 pydantic = "^2.1.1"
 prometheus-fastapi-instrumentator = "^6.1.0"
+fastapi-healthchecks = "^1.0.7"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -64,6 +65,7 @@ skip-string-normalization = '1'
 [tool.mypy]
 python_version = '3.11'
 show_error_codes = true
+ignore_missing_imports = true
 plugins = ['pydantic.mypy']
 exclude = [
     'test',

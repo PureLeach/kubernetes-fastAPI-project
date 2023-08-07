@@ -172,6 +172,30 @@ typing-extensions = ">=4.5.0"
 all = ["email-validator (>=2.0.0)", "httpx (>=0.23.0)", "itsdangerous (>=1.1.0)", "jinja2 (>=2.11.2)", "orjson (>=3.2.1)", "pydantic-extra-types (>=2.0.0)", "pydantic-settings (>=2.0.0)", "python-multipart (>=0.0.5)", "pyyaml (>=5.3.1)", "ujson (>=4.0.1,!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0)", "uvicorn[standard] (>=0.12.0)"]
 
 [[package]]
+name = "fastapi-healthchecks"
+version = "1.0.7"
+description = "FastAPI Healthchecks"
+category = "main"
+optional = false
+python-versions = ">=3.10,<4.0"
+files = [
+    {file = "fastapi_healthchecks-1.0.7-py3-none-any.whl", hash = "sha256:c568bc84c0bf77470b268c14e76d09bad09d995e5cad91099ae40b5c79110d30"},
+    {file = "fastapi_healthchecks-1.0.7.tar.gz", hash = "sha256:2aa229b8cf3109e7fc46083fb5180a058a55945072a202db18ca417d1eed3cd3"},
+]
+
+[package.dependencies]
+fastapi = ">=0.70.1"
+pydantic = ">=1.9"
+
+[package.extras]
+all = ["aio-pika (>=7)", "aioboto3 (>=9.3)", "aiohttp[speedups] (>=3,<4)", "asyncpg (>=0.25.0)", "redis (>=4,<5)"]
+ceph = ["aioboto3 (>=9.3)"]
+http = ["aiohttp[speedups] (>=3,<4)"]
+postgres = ["asyncpg (>=0.25.0)"]
+rabbitmq = ["aio-pika (>=7)"]
+redis = ["redis (>=4,<5)"]
+
+[[package]]
 name = "filelock"
 version = "3.12.2"
 description = "A platform independent file lock."
@@ -756,4 +780,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "8e882b3f112b573c24ab7d765123be2879874fdbbc98b0e5deaf9cfee99a63e4"
+content-hash = "93086dbd11c83a4a5fa5b577487a09f0eaba6604eada4aab64a0fddba4cc266c"
