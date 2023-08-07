@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-storage-service-deployment
+  namespace: fastapi-storage-service
+  labels:
+    app: storage-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: storage-service-app
+  template:
+    metadata:
+      labels:
+        app: storage-service-app
+    spec:
+      containers:
+        - image: honeyleach/fastapi-storage-service:1.0
+          imagePullPolicy: Always
+          name: fastapi-storage-service-container
+          command: ['uvicorn']
+          args: ['storage_service.main:start']
+          envFrom:
+          - secretRef:
+              name: storage-service-secret
+          ports:
+            - containerPort: 8000
+              name: fastapi
+          readinessProbe:
+            httpGet:
+              port: 8000
+              path: /probes/readiness
+            initialDelaySeconds: 15
+          livenessProbe:
+            httpGet:
+              port: 8000
+              path: /probes/liveness
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "0.5"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
