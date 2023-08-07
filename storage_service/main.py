@@ -21,3 +21,7 @@ app.include_router(endpoints.router)
 def start():
     logger.info('Launching the application')
     uvicorn.run('storage_service.main:app', host=SERVER_HOST, port=SERVER_PORT, reload=SERVER_RELOAD)
+
+
+if __name__ == '__main__':
+    start()

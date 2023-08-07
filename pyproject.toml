@@ -2,7 +2,7 @@
 name = "kubernetes-fastapi-test-task"
 version = "0.1.0"
 description = "Сервис хранилище JSON-объектов, предназначенный для работы в облачной среде Kubernetes"
-authors = ["barannikovMU <barannikov.mu@gmail.com>"]
+authors = ["Maxim Barannikov <barannikov.mu@gmail.com>"]
 readme = "README.md"
 packages = [{include = "storage_service"}]
 

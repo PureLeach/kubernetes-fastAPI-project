@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  fastapi:
+    container_name: ${COMPOSE_PROJECT_NAME}_fastapi
+    build:
+      context: ./
+    command: uvicorn storage_service.main:start
+    restart: 'no'
+    volumes:
+      - ./storage_service:/storage_service
+    ports:
+      - 8000:8000
+    env_file:
+      - .env
+    logging:
+      driver: json-file
