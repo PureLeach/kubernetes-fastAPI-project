@@ -1,3 +1,7 @@
+"""
+Настройка логирования приложения
+"""
+
 import logging
 import logging.config
 
