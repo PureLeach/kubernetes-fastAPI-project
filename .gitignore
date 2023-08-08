@@ -211,3 +211,5 @@ testlocal_*
 
 # VSCode settings
 .vscode/
+
+data.json

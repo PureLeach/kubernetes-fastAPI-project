@@ -12,6 +12,7 @@ env = Env()
 env.read_env(override=True)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+OBJECTS_DATA = f'{BASE_DIR}/data.json'
 
 SERVER_HOST = env.str('SERVER_HOST', default='0.0.0.0')
 SERVER_PORT = env.int('SERVER_PORT', default=8000)
