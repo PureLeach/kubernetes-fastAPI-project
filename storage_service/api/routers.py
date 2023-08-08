@@ -25,12 +25,9 @@ async def set_object(key: str, json_object: dict[str, Any], expires: int = Heade
         expires (int, optional): опциональный заголовок, который определяет ttl объекта в секундах
     """
 
-    result = await cache.set(key, json_object, ttl=expires)
-    if result:
-        cache_meta[key] = expires
-        return Response(status_code=status.HTTP_201_CREATED)
-    logger.error('Ошибка при попытке сохранения объекта', key=key, json_object=json_object, expires=expires)
-    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Неопределенная ошибка сервера')
+    await cache.set(key, json_object, ttl=expires)
+    cache_meta[key] = expires
+    return Response(status_code=status.HTTP_201_CREATED)
 
 
 @objects_router.get('/{key}', response_model=dict[str, Any], summary='Чтение объекта из хранилища')

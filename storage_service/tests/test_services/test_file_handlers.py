@@ -40,7 +40,7 @@ async def test_checking_contents_of_the_file(create_objects):
 
 @pytest.mark.asyncio
 async def test_restoring_objects_from_file(create_file):
-    """Проверяем, что данные из файла восстанавливаются в ОЗУ"""
+    """Проверяем, что данные из файла восстанавливаются в ОЗУ и файл удаляется"""
 
     key, object_data, expires = await create_file
 
@@ -49,3 +49,4 @@ async def test_restoring_objects_from_file(create_file):
 
     assert cache_meta == {key: expires}
     assert object_in_ram_cache == object_data
+    assert Path(OBJECTS_DATA).exists() is False
