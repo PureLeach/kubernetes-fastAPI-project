@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from structlog import getLogger
 
-from storage_service.api.routers import objects_router
+from storage_service.api.objects import objects_router
 from storage_service.services.file_handlers import (
     restoring_objects_from_file,
     save_objects_to_file,
