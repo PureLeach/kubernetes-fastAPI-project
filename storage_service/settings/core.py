@@ -23,4 +23,4 @@ cache = Cache(
     Cache.MEMORY,
     serializer=JsonSerializer(),
 )
-cache_keys: set[str] = set()
+cache_meta: dict[str, int] = {}

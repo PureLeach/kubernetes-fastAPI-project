@@ -3,7 +3,7 @@ from typing import Any
 from fastapi import APIRouter, Header, HTTPException, Response, status
 from structlog import getLogger
 
-from storage_service.settings.core import cache, cache_keys
+from storage_service.settings.core import cache, cache_meta
 
 logger = getLogger(__name__)
 objects_router = APIRouter(prefix='/objects', tags=['objects'])
@@ -27,7 +27,7 @@ async def set_object(key: str, json_object: dict[str, Any], expires: int = Heade
 
     result = await cache.set(key, json_object, ttl=expires)
     if result:
-        cache_keys.add(key)
+        cache_meta[key] = expires
         return Response(status_code=status.HTTP_201_CREATED)
     logger.error('Ошибка при попытке сохранения объекта', key=key, json_object=json_object, expires=expires)
     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Неопределенная ошибка сервера')
