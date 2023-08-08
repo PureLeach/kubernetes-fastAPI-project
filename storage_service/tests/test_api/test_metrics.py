@@ -4,7 +4,7 @@ from fastapi import status
 
 @pytest.mark.asyncio
 async def test_metrics(client):
-    """Проверка запроса GET /metrics для Prometheus"""
+    """Checking GET /metrics request for Prometheus"""
 
     response = client.get('/metrics')
 

@@ -1,8 +1,8 @@
 """
-Интеграция Prometheus с FastAPI
+Prometheus integration with FastAPI
 
-Prometheus - это система мониторинга и алертинга, которая позволяет
-собирать и анализировать метрики приложения.
+Prometheus is a monitoring and alerting system that allows you to
+collect and analyse application metrics.
 """
 
 from prometheus_fastapi_instrumentator import Instrumentator, metrics

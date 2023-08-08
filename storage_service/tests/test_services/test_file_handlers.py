@@ -16,7 +16,7 @@ from storage_service.settings.core import (
 
 @pytest.mark.asyncio
 async def test_save_objects_to_file(create_objects):
-    """Проверяем, что создаётся файл с данными из ОЗУ"""
+    """Check that the file with data from RAM is created"""
 
     await create_objects
 
@@ -27,7 +27,7 @@ async def test_save_objects_to_file(create_objects):
 
 @pytest.mark.asyncio
 async def test_checking_contents_of_the_file(create_objects):
-    """Проверяем содержание файла"""
+    """Checking the content of the file"""
 
     key, object_data, expires = await create_objects
 
@@ -40,7 +40,7 @@ async def test_checking_contents_of_the_file(create_objects):
 
 @pytest.mark.asyncio
 async def test_restoring_objects_from_file(create_file):
-    """Проверяем, что данные из файла восстанавливаются в ОЗУ и файл удаляется"""
+    """Check that the data from the file is restored to RAM and the file is deleted"""
 
     key, object_data, expires = await create_file
 

@@ -6,7 +6,7 @@ from storage_service.settings.core import cache, cache_meta
 
 @pytest.mark.asyncio
 async def test_set_object(client):
-    """Проверка запроса PUT /objects/{key}"""
+    """Checking the PUT request /objects/{key}"""
 
     key = 'object_key'
     object_data = {'test_object_two': 'payload'}
@@ -22,7 +22,7 @@ async def test_set_object(client):
 
 @pytest.mark.asyncio
 async def test_get_object(client, create_objects_for_api):
-    """Проверка запроса GET /objects/{key}. Кейс: объект существует в ОЗУ"""
+    """Checking the GET request /objects/{key}. Case: object exists in RAM"""
 
     key, object_data, expires = await create_objects_for_api
 
@@ -34,11 +34,11 @@ async def test_get_object(client, create_objects_for_api):
 
 @pytest.mark.asyncio
 async def test_get_object_not_found(client):
-    """Проверка запроса GET /objects/{key}. Кейс: объект НЕ существует в ОЗУ"""
+    """Checking the GET request /objects/{key}. Case: object does NOT exist in RAM"""
 
     key = 'nonexistent'
 
     response = client.get(f'/objects/{key}')
 
     assert response.status_code == status.HTTP_404_NOT_FOUND
-    assert response.json() == {'detail': 'Объект не найден'}
+    assert response.json() == {'detail': 'Object not found'}

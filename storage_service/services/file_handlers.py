@@ -14,10 +14,10 @@ logger = getLogger(__name__)
 
 async def save_objects_to_file():
     """
-    Сохраняем данные на диск в json-файл.
-    Сохранение данных происходит путём получения всех ключей и значений ttl из словаря cache_meta.
+    Save data to disc in a json file.
+    Data saving is done by retrieving all keys and ttl values from the cache_meta dictionary.
     """
-    logger.info('Сохраняем все объекты из оперативной памяти в файл на диске')
+    logger.info('Save all objects from RAM to a file on disc')
     data = {
         key: {'object': await cache.get(key), 'ttl': ttl} for key, ttl in cache_meta.items() if await cache.get(key)
     }
@@ -25,14 +25,16 @@ async def save_objects_to_file():
         with Path(OBJECTS_DATA).open('w') as file:
             json.dump(data, file)
     else:
-        logger.warning('В памяти нет объектов. Запись содержимого хранилища в файл на диске не будет произведена')
+        logger.warning(
+            'There are no objects in the storage. The contents of the storage will not be written to a file on the disc',
+        )
 
 
 async def restoring_objects_from_file():
     """
-    Восстанавливаем данные из json-файла в оперативную память и удаляем его.
+    Restore data from the json file to RAM and delete it.
     """
-    logger.info('Восстанавливаем все объекты из файла в оперативную память')
+    logger.info('Restore all objects from the file to RAM')
     try:
         with Path(OBJECTS_DATA).open('r') as file:
             object_data = json.load(file)
@@ -41,9 +43,9 @@ async def restoring_objects_from_file():
                 cache_meta[key] = value.get('ttl')
         Path(OBJECTS_DATA).unlink()
     except FileNotFoundError:
-        logger.warning('Файл не найден на диске. Восстановление состояния хранилища из файла невозможно осуществить')
+        logger.warning('The file is not found on the disc. It is impossible to restore the storage state from a file')
     except json.decoder.JSONDecodeError as e:
         logger.error(
-            'Ошибка при прочтении файла. Восстановление состояния хранилища из файла невозможно осуществить',
+            'Error when reading a file. It is impossible to restore the storage state from a file',
             error=e,
         )

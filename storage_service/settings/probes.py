@@ -1,8 +1,8 @@
 """
-Настройка HTTP-методов проверки liveness и readiness для интеграции с k8s.
+Configuring HTTP liveness and readiness validation methods for integration with k8s.
 
-В списки checks можно добавлять проверку различных внешних системы таких как:
-PostgreSQL (PostgreSqlCheck), RedisCheck (RedisCheck) и т.д.
+To list you can add checking of various external systems such as:
+PostgreSQL (PostgreSqlCheck), RedisCheck (RedisCheck), etc.
 """
 
 from fastapi_healthchecks.api.router import HealthcheckRouter, Probe

@@ -5,7 +5,7 @@ from storage_service.settings.core import cache, cache_meta
 
 @pytest.fixture()
 async def create_objects_for_api():
-    """Фикстура для записи данных в ОЗУ"""
+    """Fixture for writing data to RAM"""
 
     key = 'test_api_object_key'
     object_data = {'test_object_two': 'payload'}

@@ -13,16 +13,16 @@ objects_router = APIRouter(prefix='/objects', tags=['objects'])
     '/{key}',
     status_code=status.HTTP_201_CREATED,
     response_model=dict[str, Any],
-    summary='Запись объекта в хранилище',
+    summary='Writing an object to the storage',
 )
 async def set_object(key: str, json_object: dict[str, Any], expires: int = Header(None)):
     """
-    Запись объекта в хранилище
+    Writing an object to the storage
 
     Args:
-        key (str): идентификатор json-объекта в хранилище
-        json_object (Dict[str, Any]): сохраняемый json-объект
-        expires (int, optional): опциональный заголовок, который определяет ttl объекта в секундах
+        key (str): identifier of the json object in the storage
+        json_object (Dict[str, Any]): stored json object
+        expires (int, optional): optional header that specifies the object's ttl in seconds
     """
 
     await cache.set(key, json_object, ttl=expires)
@@ -30,16 +30,16 @@ async def set_object(key: str, json_object: dict[str, Any], expires: int = Heade
     return Response(status_code=status.HTTP_201_CREATED)
 
 
-@objects_router.get('/{key}', response_model=dict[str, Any], summary='Чтение объекта из хранилища')
+@objects_router.get('/{key}', response_model=dict[str, Any], summary='Reading an object from storage')
 async def get_object(key: str):
     """
-    Чтение объекта из хранилища
+    Reading an object from storage
 
     Args:
-        key (str): идентификатор json-объекта в хранилище
+        key (str): identifier of the json object in the storage
     """
 
     result = await cache.get(key)
     if result is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Объект не найден')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Object not found')
     return result

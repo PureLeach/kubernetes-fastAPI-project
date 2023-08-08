@@ -1,5 +1,5 @@
 """
-Настройка логирования приложения
+Configuring application logging
 """
 
 import logging

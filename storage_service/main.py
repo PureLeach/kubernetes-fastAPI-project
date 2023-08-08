@@ -27,24 +27,20 @@ instrumentator.instrument(app).expose(app)
 
 @app.on_event('startup')
 async def startup_event():
-    """
-    Функция отрабатывает перед запуском программы
-    """
+    """The function is executed before the server starts"""
     await restoring_objects_from_file()
 
 
 @app.on_event('shutdown')
 async def shutdown_event():
-    """
-    Функция отрабатывает перед завершением программы
-    """
+    """The function is executed before the server terminates"""
     await save_objects_to_file()
 
 
 def start():
-    logger.info('Запуск приложения')
+    logger.info('Launching the application')
     uvicorn.run('storage_service.main:app', host=SERVER_HOST, port=SERVER_PORT, reload=SERVER_RELOAD)
-    logger.info('Завершение работы приложения')
+    logger.info('Application shutdown')
 
 
 if __name__ == '__main__':

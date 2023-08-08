@@ -14,7 +14,7 @@ def client():
 
 @pytest.fixture(autouse=True)
 def cleanup_cache():
-    """Очищаем кеш после каждого теста"""
+    """Clear the cache after each test"""
 
     yield
     asyncio.run(cache.clear())

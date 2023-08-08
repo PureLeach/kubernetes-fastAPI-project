@@ -8,7 +8,7 @@ from storage_service.settings.core import OBJECTS_DATA, cache, cache_meta
 
 @pytest.fixture()
 async def create_objects():
-    """Фикстура для записи данных в ОЗУ"""
+    """Fixture for writing data to RAM"""
 
     key = 'test_object_key'
     object_data = {'test_object_one': 'payload'}
@@ -20,7 +20,7 @@ async def create_objects():
 
 @pytest.fixture()
 async def create_file():
-    """Фикстура создания файла"""
+    """File creation fixture"""
 
     key = 'test_object_key'
     object_data = {'test_object_one': 'payload'}
@@ -35,8 +35,8 @@ async def create_file():
 @pytest.fixture(autouse=True)
 def cleanup_file():
     """
-    Удаление файла по завершении тестирования, если он существует
-    Запускается после завершения каждого теста в рамках каталога
+    Deleting a file at the end of testing, if it exists.
+    Runs after completion of each test within the catalogue
     """
     path = Path(OBJECTS_DATA)
 
