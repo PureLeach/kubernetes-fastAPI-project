@@ -33,6 +33,8 @@ black = "*"
 ruff = "*"
 mypy = "*"
 pre-commit = "*"
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.1"
 
 
 [tool.ruff]
@@ -59,25 +61,36 @@ ignore = [
 [tool.ruff.flake8-quotes]
 inline-quotes = "single"
 
+[tool.ruff.per-file-ignores]
+"storage_service/tests/**/*.py" = [
+    "S101", # asserts allowed in tests...
+]
+
+
 [tool.black]
 line-length = 120
-skip-string-normalization = '1'
+skip-string-normalization = "1"
 
 
 [tool.mypy]
-python_version = '3.11'
+python_version = "3.11"
 show_error_codes = true
 ignore_missing_imports = true
-plugins = ['pydantic.mypy']
+plugins = ["pydantic.mypy"]
 exclude = [
-    'test',
-    'conftest',
+    "test",
+    "conftest",
 ]
 
 
 [tool.pydantic-mypy]
 warn_untyped_fields = true
 
+
+[tool.pytest.ini_options]
+env_override_existing_values = "1"
+env_files = ".env"
+addopts = "-s -p no:warnings"
 
 [build-system]
 requires = ["poetry-core"]
