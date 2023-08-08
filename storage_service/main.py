@@ -55,11 +55,7 @@ async def save_objects_to_file():
     """
     logger.info('Сохраняем все объекты из оперативной памяти в файл на диске')
 
-    data = {}
-    for key in cache_keys:
-        object_data = await cache.get(key)
-        if object_data:
-            data[key] = object_data
+    data = {key: await cache.get(key) for key in cache_keys if await cache.get(key)}
     if data:
         with Path(OBJECTS_DATA).open('w') as file:
             json.dump(data, file)
