@@ -22,7 +22,7 @@ async def test_set_object(client):
 
 @pytest.mark.asyncio
 async def test_get_object(client, create_objects_for_api):
-    """Проверка запроса PUT /objects/{key}. Кейс: объект существует в ОЗУ"""
+    """Проверка запроса GET /objects/{key}. Кейс: объект существует в ОЗУ"""
 
     key, object_data, expires = await create_objects_for_api
 
@@ -34,7 +34,7 @@ async def test_get_object(client, create_objects_for_api):
 
 @pytest.mark.asyncio
 async def test_get_object_not_found(client):
-    """Проверка запроса PUT /objects/{key}. Кейс: объект НЕ существует в ОЗУ"""
+    """Проверка запроса GET /objects/{key}. Кейс: объект НЕ существует в ОЗУ"""
 
     key = 'nonexistent'
 
