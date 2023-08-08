@@ -9,11 +9,11 @@ from fastapi_healthchecks.api.router import HealthcheckRouter, Probe
 
 healthcheck_router = HealthcheckRouter(
     Probe(
-        name="readiness",
+        name='readiness',
         checks=[],
     ),
     Probe(
-        name="liveness",
+        name='liveness',
         checks=[],
     ),
 )
