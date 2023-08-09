@@ -26,25 +26,28 @@ There are a total of three quick ways to get your project up and running:
 1. Use the commands:
 
     ```> cp example.env .env```
+
     ```> poetry install```
+
     ```> poetry shell```
+   
     ```> poetry run start```
 
-2. Go to ```http://localhost:8000/docs``` to view and use the endpoints
+3. Go to ```http://localhost:8000/docs``` to view and use the endpoints
 
 ### Method 2. Docker Compose
 
 1. Use the command
 
-    ```cp example.env .env```
+    ```> cp example.env .env```
 
 2. Use docker compose to build an image
 
-    ```docker-compose build```
+    ```> docker-compose build```
 
 3. Run docker compose up to start the application
 
-    ```docker-compose up```
+    ```> docker-compose up```
 
 4. Go to ```http://localhost:8000/docs``` to view and use the endpoints
 
@@ -53,7 +56,9 @@ There are a total of three quick ways to get your project up and running:
 1. Use the commands:
 
     ```> cd k8s/```
+
     ```> kubectl apply -f namespace```
+
     ```> kubectl apply -f fastapi```
 
 2. Make sure that pod has been started with the command
@@ -65,6 +70,4 @@ There are a total of three quick ways to get your project up and running:
 
 ## Tests:
 
-To run the tests, load the dependencies using the poetry package manager and run the command:
-
-    ```> pytest```
+To run the tests, load the dependencies using the poetry package manager and run the command `> pytest`
