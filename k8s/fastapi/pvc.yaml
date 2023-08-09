@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: fastapi-storage-service-pvc
+  namespace: fastapi-storage-service
+  labels:
+    app: storage-service
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 32Mi
+

@@ -16,14 +16,17 @@ spec:
         app: storage-service-app
     spec:
       containers:
-        - image: honeyleach/fastapi-storage-service:1.0
+        - image: honeyleach/fastapi-storage-service:1.2
           imagePullPolicy: Always
           name: fastapi-storage-service-container
+          volumeMounts:
+            - name: fastapi-storage-service-storage-class
+              mountPath: /mnt
           command: ['uvicorn']
           args: ['storage_service.main:start']
           envFrom:
           - secretRef:
-              name: storage-service-secret
+              name: fastapi-storage-service-secret
           ports:
             - containerPort: 8000
               name: fastapi
@@ -45,3 +48,7 @@ spec:
             limits:
               memory: "1Gi"
               cpu: "1"
+      volumes:
+        - name: fastapi-storage-service-storage-class
+          persistentVolumeClaim:
+            claimName: fastapi-storage-service-pvc

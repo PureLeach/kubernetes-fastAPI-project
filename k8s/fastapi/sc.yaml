@@ -1,0 +1,10 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: fastapi-storage-service-storage-class
+  namespace: fastapi-storage-service
+  labels:
+    app: storage-service
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+
