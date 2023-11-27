@@ -29,7 +29,6 @@ aiocache = "^0.12.2"
 
 
 [tool.poetry.group.dev.dependencies]
-black = "*"
 ruff = "*"
 mypy = "*"
 pre-commit = "*"
@@ -39,38 +38,57 @@ httpx = "^0.24.1"
 
 
 [tool.ruff]
+target-version = 'py311'
+line-length = 120
 select = [
-    "E",   # pycodestyle error
-    "W",   # pycodestyle warning
-    "F",   # pyflakes
-    "A",   # flakes8-builtins
-    "COM", # flakes8-commas
-    "C4",  # flake8-comprehensions
-    "Q",   # flake8-quotes
-    "SIM", # flake8-simplify
-    "PTH", # flake8-use-pathlib
-    "I",   # isort
-    "N",   # pep8 naming
-    "UP",  # pyupgrade  
-    "S",   # bandit
+    "E",       # pycodestyle error
+    "W",       # pycodestyle warning
+    "F",       # pyflakes
+    "A",       # flakes8-builtins
+    "B",       # flake8-bugbear
+    "COM",     # flakes8-commas
+    "C4",      # flake8-comprehensions
+    "Q",       # flake8-quotes
+    "SIM",     # flake8-simplify
+    "PTH",     # flake8-use-pathlib
+    "I",       # isort
+    "N",       # pep8 naming
+    "UP",      # pyupgrade  
+    "S",       # bandit
+    "TID",     # flake8-tidy-imports
+    "ICN",     # flake8-import-conventions
+    "ISC",     # flake8-implicit-str-concat
+    "TCH",     # flake8-type-checking
+    "INT",     # flake8-gettext
+    "YTT",     # flake8-2020
+    "FA",      # flake8-future-annotations
+    "C90",     # mccabe
+    "PIE",     # flake8-pie
+    "RSE",     # flake8-raise
+    "PGH",     # pygrep-hooks
+    "D201", "D204", "D206", "D207", "D208", "D209", "D210", "D211", "D213", "D300", "D301", "D402", "D412", "D414",  # docstring
 ]
 ignore = [
-    "E501",  # disabled control on the length of the string
-    "S104",  # possible binding to all interfaces
+    "E501",          # disabled control on the length of the string
+    "S104",          # possible binding to all interfaces
+    "Q000", "Q003",  # request ruff format
 ]
 
-[tool.ruff.flake8-quotes]
-inline-quotes = "single"
+[tool.ruff.format]
+# Prefer single quotes over double quotes.
+quote-style = "single"
+
+[tool.ruff.mccabe]
+max-complexity = 25
+
+[tool.ruff.lint.flake8-import-conventions.aliases]
+# Declare the default aliases.
+typing = "t"
 
 [tool.ruff.per-file-ignores]
 "storage_service/tests/**/*.py" = [
-    "S101", # asserts allowed in tests...
+    "S101", # asserts allowed in tests
 ]
-
-
-[tool.black]
-line-length = 120
-skip-string-normalization = "1"
 
 
 [tool.mypy]
@@ -83,7 +101,6 @@ exclude = [
     "conftest",
 ]
 
-
 [tool.pydantic-mypy]
 warn_untyped_fields = true
 
@@ -92,6 +109,7 @@ warn_untyped_fields = true
 env_override_existing_values = "1"
 env_files = ".env"
 addopts = "-s -p no:warnings"
+
 
 [build-system]
 requires = ["poetry-core"]
