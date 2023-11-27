@@ -26,6 +26,8 @@ pydantic = "^2.1.1"
 prometheus-fastapi-instrumentator = "^6.1.0"
 fastapi-healthchecks = "^1.0.7"
 aiocache = "^0.12.2"
+aiofiles = "^23.2.1"
+orjson = "^3.9.10"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -35,6 +37,7 @@ pre-commit = "*"
 pytest = "^7.4.0"
 pytest-asyncio = "^0.21.1"
 httpx = "^0.24.1"
+types-aiofiles = "^23.2.0.0"
 
 
 [tool.ruff]
