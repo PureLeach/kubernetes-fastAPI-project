@@ -28,6 +28,7 @@ fastapi-healthchecks = "^1.0.7"
 aiocache = "^0.12.2"
 aiofiles = "^23.2.1"
 orjson = "^3.9.10"
+apscheduler = "^3.10.4"
 
 
 [tool.poetry.group.dev.dependencies]

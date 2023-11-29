@@ -17,3 +17,6 @@ restart:
 
 format:
 	pre-commit run -a
+
+run-scheduler:
+	python -m storage_service.tasks.run_scheduler
