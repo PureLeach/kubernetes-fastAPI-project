@@ -1,15 +1,13 @@
-import pytest
+import pytest_asyncio
 
-from storage_service.settings.core import cache, cache_meta
+from storage_service.services.storage import storage
 
 
-@pytest.fixture()
+@pytest_asyncio.fixture()
 async def create_objects_for_api():
-    """Fixture for writing data to RAM"""
-
+    """Seed a known object into RAM and yield its identifiers."""
     key = 'test_api_object_key'
     object_data = {'test_object_two': 'payload'}
     expires = 50
-    await cache.set(key, object_data, ttl=expires)
-    cache_meta[key] = expires
+    await storage.set(key, object_data, ttl=expires)
     return key, object_data, expires

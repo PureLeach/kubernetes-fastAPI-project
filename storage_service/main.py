@@ -1,3 +1,6 @@
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 import uvicorn
 from fastapi import FastAPI
 from structlog import getLogger
@@ -19,25 +22,22 @@ from storage_service.settings.probes import healthcheck_router
 setup_logging()
 logger = getLogger(__name__)
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    """Restore the on-disk snapshot on startup, persist it back on shutdown."""
+    await restoring_objects_from_file()
+    yield
+    await save_objects_to_file()
+
+
+app = FastAPI(lifespan=lifespan)
 app.include_router(objects_router)
 app.include_router(healthcheck_router, prefix='/probes')
 instrumentator.instrument(app).expose(app)
 
 
-@app.on_event('startup')
-async def startup_event():
-    """The function is executed before the server starts"""
-    await restoring_objects_from_file()
-
-
-@app.on_event('shutdown')
-async def shutdown_event():
-    """The function is executed before the server terminates"""
-    await save_objects_to_file()
-
-
-def start():
+def start() -> None:
     logger.info('Launching the application')
     uvicorn.run('storage_service.main:app', host=SERVER_HOST, port=SERVER_PORT, reload=SERVER_RELOAD)
     logger.info('Application shutdown')

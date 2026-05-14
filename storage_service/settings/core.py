@@ -1,11 +1,7 @@
-"""
-Основные настройки и параметры приложения
-"""
+"""Application core settings and parameters."""
 
 from pathlib import Path
 
-from aiocache import Cache
-from aiocache.serializers import JsonSerializer
 from environs import Env
 
 env = Env()
@@ -17,10 +13,3 @@ OBJECTS_DATA = f'{BASE_DIR.parent}/mnt/data.json'
 SERVER_HOST = env.str('SERVER_HOST', default='0.0.0.0')
 SERVER_PORT = env.int('SERVER_PORT', default=8000)
 SERVER_RELOAD = env.bool('SERVER_RELOAD', default=True)
-
-
-cache = Cache(
-    Cache.MEMORY,
-    serializer=JsonSerializer(),
-)
-cache_meta: dict[str, int] = {}

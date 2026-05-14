@@ -1,21 +1,18 @@
-import asyncio
-
 import pytest
+import pytest_asyncio
 from fastapi.testclient import TestClient
 
 from storage_service.main import app
-from storage_service.settings.core import cache, cache_meta
+from storage_service.services.storage import storage
 
 
 @pytest.fixture()
-def client():
+def client() -> TestClient:
     return TestClient(app)
 
 
-@pytest.fixture(autouse=True)
-def cleanup_cache():
-    """Clear the cache after each test"""
-
+@pytest_asyncio.fixture(autouse=True)
+async def _clean_storage():
+    """Reset the in-memory storage between tests."""
     yield
-    asyncio.run(cache.clear())
-    cache_meta.clear()
+    await storage.clear()

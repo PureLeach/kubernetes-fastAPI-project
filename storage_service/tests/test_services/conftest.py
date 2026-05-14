@@ -2,26 +2,25 @@ import json
 from pathlib import Path
 
 import pytest
+import pytest_asyncio
 
-from storage_service.settings.core import OBJECTS_DATA, cache, cache_meta
+from storage_service.services.storage import storage
+from storage_service.settings.core import OBJECTS_DATA
 
 
-@pytest.fixture()
+@pytest_asyncio.fixture()
 async def create_objects():
-    """Fixture for writing data to RAM"""
-
+    """Seed a known object into RAM."""
     key = 'test_object_key'
     object_data = {'test_object_one': 'payload'}
     expires = 100
-    await cache.set(key, object_data, ttl=expires)
-    cache_meta[key] = expires
+    await storage.set(key, object_data, ttl=expires)
     return key, object_data, expires
 
 
 @pytest.fixture()
-async def create_file():
-    """File creation fixture"""
-
+def create_file():
+    """Pre-write a snapshot file on disk for restore tests."""
     key = 'test_object_key'
     object_data = {'test_object_one': 'payload'}
     expires = 100
@@ -34,12 +33,8 @@ async def create_file():
 
 @pytest.fixture(autouse=True)
 def cleanup_file():
-    """
-    Deleting a file at the end of testing, if it exists.
-    Runs after completion of each test within the catalogue
-    """
-    path = Path(OBJECTS_DATA)
-
+    """Delete the snapshot file after each test if it exists."""
     yield
+    path = Path(OBJECTS_DATA)
     if path.exists():
         path.unlink()
