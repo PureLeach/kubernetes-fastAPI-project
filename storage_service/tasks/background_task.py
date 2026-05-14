@@ -4,5 +4,4 @@ logger = getLogger(__name__)
 
 
 async def trial_background_task():
-    # Code for your background task goes here
-    logger.info('Running background task...')
+    logger.info('trial_task_fired')

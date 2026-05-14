@@ -5,9 +5,9 @@ import logging.config
 
 import structlog
 
-from storage_service.settings.core import env
+from storage_service.settings.core import get_settings
 
-LOG_LEVEL_ROOT = env.str('LOG_LEVEL_ROOT', default='INFO')
+LOG_LEVEL_ROOT = get_settings().log_level_root
 
 
 LOG_CONFIG = {

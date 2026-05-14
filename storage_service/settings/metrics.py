@@ -1,13 +1,8 @@
-"""
-Prometheus integration with FastAPI
-
-Prometheus is a monitoring and alerting system that allows you to
-collect and analyse application metrics.
-"""
+"""Prometheus integration with FastAPI."""
 
 from prometheus_fastapi_instrumentator import Instrumentator, metrics
 
-instrumentator = Instrumentator(should_group_status_codes=True, should_respect_env_var=True)
+instrumentator = Instrumentator(should_group_status_codes=True)
 
 instrumentator.add(
     metrics.request_size(
