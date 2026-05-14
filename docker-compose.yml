@@ -1,17 +1,21 @@
-version: '3.7'
-
 services:
   fastapi:
-    container_name: ${COMPOSE_PROJECT_NAME}_fastapi
+    container_name: ${COMPOSE_PROJECT_NAME:-storage_service}_fastapi
     build:
       context: ./
-    command: uvicorn storage_service.main:start
-    restart: 'no'
-    volumes:
-      - ./storage_service:/storage_service
+    image: ${COMPOSE_PROJECT_NAME:-storage_service}:local
+    restart: unless-stopped
     ports:
-      - 8000:8000
+      - "8000:8000"
     env_file:
       - .env
+    volumes:
+      - storage-data:/app/mnt
     logging:
       driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  storage-data:
