@@ -5,6 +5,10 @@ metadata:
   namespace: fastapi-storage-service
   labels:
     app: storage-service
+    app.kubernetes.io/name: storage-service
+    app.kubernetes.io/version: "0.2.0"
+    app.kubernetes.io/component: api
+    app.kubernetes.io/managed-by: kubectl
 spec:
   replicas: 1
   selector:
@@ -14,40 +18,56 @@ spec:
     metadata:
       labels:
         app: storage-service-app
+        app.kubernetes.io/name: storage-service
+        app.kubernetes.io/version: "0.2.0"
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
       containers:
-        - image: honeyleach/fastapi-storage-service:1.2
+        - name: fastapi-storage-service-container
+          image: honeyleach/fastapi-storage-service:0.2.0
           imagePullPolicy: Always
-          name: fastapi-storage-service-container
-          volumeMounts:
-            - name: fastapi-storage-service-storage-class
-              mountPath: /mnt
-          command: ['uvicorn']
-          args: ['storage_service.main:start']
-          envFrom:
-          - secretRef:
-              name: fastapi-storage-service-secret
           ports:
             - containerPort: 8000
-              name: fastapi
-          readinessProbe:
-            httpGet:
-              port: 8000
-              path: /probes/readiness
-            initialDelaySeconds: 15
-          livenessProbe:
-            httpGet:
-              port: 8000
-              path: /probes/liveness
-            initialDelaySeconds: 15
-            periodSeconds: 15
+              name: http
+          envFrom:
+            - secretRef:
+                name: fastapi-storage-service-secret
+          volumeMounts:
+            - name: fastapi-storage-service-storage-class
+              mountPath: /app/mnt
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
           resources:
             requests:
               memory: "512Mi"
-              cpu: "0.5"
+              cpu: "500m"
             limits:
               memory: "1Gi"
-              cpu: "1"
+              cpu: "1000m"
+          startupProbe:
+            httpGet:
+              port: http
+              path: /probes/liveness
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /probes/readiness
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /probes/liveness
+            periodSeconds: 15
       volumes:
         - name: fastapi-storage-service-storage-class
           persistentVolumeClaim:

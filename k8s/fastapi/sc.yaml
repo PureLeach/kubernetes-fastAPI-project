@@ -7,4 +7,3 @@ metadata:
     app: storage-service
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
-
