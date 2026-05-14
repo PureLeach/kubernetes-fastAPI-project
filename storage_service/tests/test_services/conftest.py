@@ -5,7 +5,7 @@ import pytest
 import pytest_asyncio
 
 from storage_service.services.storage import storage
-from storage_service.settings.core import OBJECTS_DATA
+from storage_service.settings.core import get_settings
 
 
 @pytest_asyncio.fixture()
@@ -26,7 +26,7 @@ def create_file():
     expires = 100
 
     file_content = {key: {'object': object_data, 'ttl': expires}}
-    with Path(OBJECTS_DATA).open('w') as file:
+    with Path(get_settings().objects_data_path).open('w') as file:
         json.dump(file_content, file)
     return key, object_data, expires
 
@@ -35,6 +35,6 @@ def create_file():
 def cleanup_file():
     """Delete the snapshot file after each test if it exists."""
     yield
-    path = Path(OBJECTS_DATA)
+    path = Path(get_settings().objects_data_path)
     if path.exists():
         path.unlink()
