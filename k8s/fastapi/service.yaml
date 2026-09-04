@@ -1,16 +1,22 @@
+# NodePort keeps this reachable on a single-node cluster; a real deployment
+# would front it with an Ingress.
 apiVersion: v1
 kind: Service
 metadata:
-  name: fastapi-storage-service-service
+  name: storage-service
   namespace: fastapi-storage-service
   labels:
-    app: storage-service
+    app.kubernetes.io/name: storage-service
+    app.kubernetes.io/instance: storage-service
+    app.kubernetes.io/part-of: storage-service
 spec:
   type: NodePort
   selector:
-    app: storage-service-app
+    app.kubernetes.io/name: storage-service
+    app.kubernetes.io/instance: storage-service
   ports:
-    - protocol: TCP
+    - name: http
+      protocol: TCP
       port: 8000
-      targetPort: 8000
+      targetPort: http
       nodePort: 31001

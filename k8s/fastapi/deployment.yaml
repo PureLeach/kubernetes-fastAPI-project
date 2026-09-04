@@ -1,26 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: fastapi-storage-service-deployment
+  name: storage-service
   namespace: fastapi-storage-service
-  labels:
-    app: storage-service
+  labels: &labels
     app.kubernetes.io/name: storage-service
-    app.kubernetes.io/version: "0.2.0"
+    app.kubernetes.io/instance: storage-service
     app.kubernetes.io/component: api
-    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/part-of: storage-service
+    app.kubernetes.io/version: "0.2.0"
 spec:
   replicas: 1
+  # ReadWriteOnce volume: a new Pod cannot attach it while the old one holds
+  # it, so a rolling update would deadlock in ContainerCreating.
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
-      app: storage-service-app
+      app.kubernetes.io/name: storage-service
+      app.kubernetes.io/instance: storage-service
   template:
     metadata:
-      labels:
-        app: storage-service-app
-        app.kubernetes.io/name: storage-service
-        app.kubernetes.io/version: "0.2.0"
+      labels: *labels
     spec:
+      # The Pod calls no Kubernetes API.
+      automountServiceAccountToken: false
+      # Shutdown flushes the objects to disk; leave room for it.
+      terminationGracePeriodSeconds: 30
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -29,46 +35,57 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: fastapi-storage-service-container
+        - name: api
           image: honeyleach/fastapi-storage-service:0.2.0
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
               name: http
           envFrom:
-            - secretRef:
-                name: fastapi-storage-service-secret
+            - configMapRef:
+                name: storage-service-config
           volumeMounts:
-            - name: fastapi-storage-service-storage-class
+            - name: snapshot
               mountPath: /app/mnt
+            - name: tmp
+              mountPath: /tmp
           securityContext:
             allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
             capabilities:
               drop: ["ALL"]
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "500m"
+              memory: "128Mi"
+              cpu: "100m"
             limits:
-              memory: "1Gi"
+              memory: "512Mi"
               cpu: "1000m"
+          # Startup absorbs the snapshot restore, so a slow one cannot
+          # restart-loop the pod before liveness takes over.
           startupProbe:
             httpGet:
               port: http
               path: /probes/liveness
             failureThreshold: 30
             periodSeconds: 5
+          # Checks the snapshot volume is mounted and writable.
           readinessProbe:
             httpGet:
               port: http
               path: /probes/readiness
             periodSeconds: 10
+            failureThreshold: 3
           livenessProbe:
             httpGet:
               port: http
               path: /probes/liveness
             periodSeconds: 15
+            failureThreshold: 3
       volumes:
-        - name: fastapi-storage-service-storage-class
+        - name: snapshot
           persistentVolumeClaim:
-            claimName: fastapi-storage-service-pvc
+            claimName: storage-service-pvc
+        # Scratch space for readOnlyRootFilesystem.
+        - name: tmp
+          emptyDir: {}

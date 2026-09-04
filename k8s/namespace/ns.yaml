@@ -3,4 +3,5 @@ kind: Namespace
 metadata:
   name: fastapi-storage-service
   labels:
-    name: fastapi-storage-service
+    app.kubernetes.io/name: storage-service
+    app.kubernetes.io/part-of: storage-service
