@@ -205,7 +205,7 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 # MacOS filesysm
-.DS_store
+.DS_Store
 
 # local test files
 testlocal_*
