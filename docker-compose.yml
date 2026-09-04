@@ -6,11 +6,15 @@ services:
     image: ${COMPOSE_PROJECT_NAME:-storage_service}:local
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "${SERVER_PORT:-8000}:8000"
+    # Optional: the image has working defaults, so a fresh clone runs without it.
     env_file:
-      - .env
+      - path: .env
+        required: false
     volumes:
       - storage-data:/app/mnt
+    # Shutdown writes the snapshot.
+    stop_grace_period: 30s
     logging:
       driver: json-file
       options:
