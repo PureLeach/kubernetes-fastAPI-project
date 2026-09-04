@@ -1,57 +1,63 @@
 """Configuring application logging."""
 
+from __future__ import annotations
+
 import logging
 import logging.config
 
 import structlog
 
-from storage_service.settings.core import get_settings
 
-LOG_LEVEL_ROOT = get_settings().log_level_root
-
-
-LOG_CONFIG = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'text': {
-            '()': structlog.stdlib.ProcessorFormatter,
-            'processor': structlog.dev.ConsoleRenderer(),
+def build_log_config(level: str) -> dict[str, object]:
+    """Return a `logging.config.dictConfig` document for the given root level."""
+    return {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'text': {
+                '()': structlog.stdlib.ProcessorFormatter,
+                'processor': structlog.dev.ConsoleRenderer(),
+            },
+            'json': {
+                '()': structlog.stdlib.ProcessorFormatter,
+                'processor': structlog.processors.JSONRenderer(ensure_ascii=False),
+                'foreign_pre_chain': [
+                    structlog.contextvars.merge_contextvars,
+                    structlog.processors.TimeStamper(fmt='iso'),
+                    structlog.stdlib.add_logger_name,
+                    structlog.stdlib.add_log_level,
+                    structlog.stdlib.PositionalArgumentsFormatter(),
+                ],
+            },
         },
-        'json': {
-            '()': structlog.stdlib.ProcessorFormatter,
-            'processor': structlog.processors.JSONRenderer(ensure_ascii=False),
-            'foreign_pre_chain': [
-                structlog.contextvars.merge_contextvars,
-                structlog.processors.TimeStamper(fmt='iso'),
-                structlog.stdlib.add_logger_name,
-                structlog.stdlib.add_log_level,
-                structlog.stdlib.PositionalArgumentsFormatter(),
-            ],
+        'handlers': {
+            'console_text': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'text',
+            },
+            'console_json': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'json',
+            },
         },
-    },
-    'handlers': {
-        'console_text': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'text',
+        'loggers': {
+            'root': {
+                'handlers': ['console_json'],
+                'level': level.upper(),
+                'propagate': False,
+            },
         },
-        'console_json': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'json',
-        },
-    },
-    'loggers': {
-        'root': {
-            'handlers': ['console_json'],
-            'level': LOG_LEVEL_ROOT,
-            'propagate': False,
-        },
-    },
-}
+    }
 
 
-def setup_logging() -> None:
-    logging.config.dictConfig(LOG_CONFIG)
+def setup_logging(level: str = 'INFO') -> None:
+    """
+    Install the structlog/stdlib logging pipeline.
+
+    The level is passed in rather than read from the settings singleton, so an
+    app built with injected `Settings` logs at its own level.
+    """
+    logging.config.dictConfig(build_log_config(level))
     structlog.configure(
         context_class=dict,
         logger_factory=structlog.stdlib.LoggerFactory(),
