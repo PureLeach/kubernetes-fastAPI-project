@@ -1,10 +1,13 @@
+# Cluster-scoped, so no namespace. A local volume is pinned to one node:
+# set nodeAffinity to a node from `kubectl get nodes` and create the directory
+# there first, as a local PV will not create it. See the README.
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: fastapi-storage-service-pv
-  namespace: fastapi-storage-service
+  name: storage-service-pv
   labels:
-    app: storage-service
+    app.kubernetes.io/name: storage-service
+    app.kubernetes.io/part-of: storage-service
 spec:
   capacity:
     storage: 64Mi
@@ -12,9 +15,9 @@ spec:
   accessModes:
     - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: local-storage
+  storageClassName: storage-service-local
   local:
-    path: /mnt/local-storage
+    path: /mnt/storage-service
   nodeAffinity:
     required:
       nodeSelectorTerms:
@@ -22,4 +25,4 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - kub-fastapi-storage-service-pv
+                - minikube

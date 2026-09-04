@@ -1,11 +1,16 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: fastapi-storage-service-pvc
+  name: storage-service-pvc
   namespace: fastapi-storage-service
   labels:
-    app: storage-service
+    app.kubernetes.io/name: storage-service
+    app.kubernetes.io/instance: storage-service
+    app.kubernetes.io/part-of: storage-service
 spec:
+  # Required: omitting this falls back to the cluster's default StorageClass
+  # rather than matching any class, binding the claim to the wrong volume.
+  storageClassName: storage-service-local
   accessModes:
     - ReadWriteOnce
   volumeMode: Filesystem

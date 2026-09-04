@@ -1,9 +1,12 @@
+# Cluster-scoped, so no namespace. The PV is pre-provisioned by hand, and
+# WaitForFirstConsumer delays binding until a Pod has been scheduled.
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: fastapi-storage-service-storage-class
-  namespace: fastapi-storage-service
+  name: storage-service-local
   labels:
-    app: storage-service
+    app.kubernetes.io/name: storage-service
+    app.kubernetes.io/part-of: storage-service
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
