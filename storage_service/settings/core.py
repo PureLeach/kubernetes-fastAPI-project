@@ -36,6 +36,12 @@ class Settings(BaseSettings):
 
     max_object_bytes: int = Field(default=1_048_576, ge=1)
 
+    snapshot_interval_seconds: int = Field(
+        default=300,
+        ge=0,
+        description='Periodic snapshot interval; 0 disables the background job.',
+    )
+
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
