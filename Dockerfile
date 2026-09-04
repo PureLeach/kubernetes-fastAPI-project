@@ -21,6 +21,10 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 FROM python:3.12-slim-bookworm AS runtime
 
+LABEL org.opencontainers.image.title="storage-service" \
+      org.opencontainers.image.description="In-memory JSON object storage with TTL, persisted across restarts." \
+      org.opencontainers.image.source="https://github.com/MaxBarannikov/kubernetes-fastAPI-project"
+
 RUN groupadd --system --gid 1001 app \
     && useradd --system --uid 1001 --gid app --home-dir /app --shell /sbin/nologin app
 
@@ -39,6 +43,9 @@ ENV PATH="/app/.venv/bin:$PATH" \
 USER app
 
 EXPOSE 8000
+
+# The shutdown snapshot hangs off SIGTERM.
+STOPSIGNAL SIGTERM
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
     CMD python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/probes/liveness',timeout=3).status==200 else 1)"

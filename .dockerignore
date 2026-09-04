@@ -1,0 +1,29 @@
+# Keep local state (.env, snapshots, git history) out of the build context.
+.git
+.github
+.gitignore
+.pre-commit-config.yaml
+.dockerignore
+Dockerfile
+docker-compose.yml
+Makefile
+k8s/
+
+storage_service/tests/
+
+# Local runtime state and caches
+.env
+.venv/
+mnt/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Editor / OS noise
+.idea/
+.vscode/
+.DS_Store
