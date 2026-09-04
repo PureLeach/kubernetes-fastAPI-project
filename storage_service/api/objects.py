@@ -4,18 +4,41 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from fastapi import APIRouter, Body, Depends, Header, HTTPException, Response, status
+from fastapi import APIRouter, Body, Depends, Header, HTTPException, Path, Response, status
 from structlog import getLogger
 
 from storage_service.api.dependencies import enforce_payload_limit, get_storage
 from storage_service.api.schemas import ErrorResponse, JsonObject
 from storage_service.services.storage import JsonObjectStorage  # noqa: TC001 — runtime needed by FastAPI DI
+from storage_service.settings.core import MAX_TTL_SECONDS
 
 logger = getLogger(__name__)
 objects_router = APIRouter(prefix='/objects', tags=['objects'])
 
 
 _OBJECT_EXAMPLE = {'name': 'widget', 'qty': 12, 'tags': ['a', 'b']}
+
+# Keys reach the logs and the snapshot file, so keep them boring.
+_KEY_PATTERN = r'^[A-Za-z0-9._:-]+$'
+
+ObjectKey = Annotated[
+    str,
+    Path(
+        description='Object key. Letters, digits, dot, underscore, colon and dash.',
+        pattern=_KEY_PATTERN,
+        max_length=256,
+        examples=['widget-42'],
+    ),
+]
+
+Expires = Annotated[
+    int | None,
+    Header(
+        description='TTL in seconds. Absent → no expiry.',
+        ge=1,
+        le=MAX_TTL_SECONDS,
+    ),
+]
 
 
 @objects_router.put(
@@ -29,16 +52,20 @@ _OBJECT_EXAMPLE = {'name': 'widget', 'qty': 12, 'tags': ['a', 'b']}
             'model': ErrorResponse,
             'description': 'Payload exceeds max_object_bytes.',
         },
+        status.HTTP_422_UNPROCESSABLE_CONTENT: {
+            'model': ErrorResponse,
+            'description': 'Invalid key or `expires` header.',
+        },
     },
 )
 async def set_object(
-    key: str,
+    key: ObjectKey,
     json_object: Annotated[
         JsonObject,
         Body(description='Arbitrary JSON object to store.', examples=[_OBJECT_EXAMPLE]),
     ],
     storage: Annotated[JsonObjectStorage, Depends(get_storage)],
-    expires: Annotated[int | None, Header(description='TTL in seconds. Absent → no expiry.')] = None,
+    expires: Expires = None,
 ) -> Response:
     """Store `json_object` under `key`. Existing values are overwritten."""
     await storage.set(key, json_object, ttl=expires)
@@ -56,7 +83,7 @@ async def set_object(
     },
 )
 async def get_object(
-    key: str,
+    key: ObjectKey,
     storage: Annotated[JsonObjectStorage, Depends(get_storage)],
 ) -> JsonObject:
     """Return the object stored under `key`, or 404 if missing/expired."""

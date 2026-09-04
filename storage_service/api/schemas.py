@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from pydantic import BaseModel, Field
 
-JsonObject = dict[str, Any]
+from storage_service.services.storage import JsonObject
+
+__all__ = ['ErrorBody', 'ErrorResponse', 'JsonObject']
 
 
 class ErrorBody(BaseModel):

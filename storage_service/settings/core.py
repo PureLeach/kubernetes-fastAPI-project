@@ -10,6 +10,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#: Upper bound for the `expires` header.
+MAX_TTL_SECONDS = 365 * 24 * 60 * 60
+
 
 class Settings(BaseSettings):
     """All runtime configuration. Values come from env vars or `.env`."""
