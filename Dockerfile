@@ -23,7 +23,7 @@ FROM python:3.12-slim-bookworm AS runtime
 
 LABEL org.opencontainers.image.title="storage-service" \
       org.opencontainers.image.description="In-memory JSON object storage with TTL, persisted across restarts." \
-      org.opencontainers.image.source="https://github.com/MaxBarannikov/kubernetes-fastAPI-project"
+      org.opencontainers.image.source="https://github.com/MaxBarannikov/kubernetes-fastapi-service"
 
 RUN groupadd --system --gid 1001 app \
     && useradd --system --uid 1001 --gid app --home-dir /app --shell /sbin/nologin app

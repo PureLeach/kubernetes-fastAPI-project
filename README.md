@@ -2,7 +2,7 @@
 
 A small, production-styled HTTP service for storing JSON objects in memory with optional TTL, designed to run in Kubernetes. State survives pod restarts via an on-disk snapshot: written on shutdown and by a periodic background job, restored at startup.
 
-[![CI](https://github.com/MaxBarannikov/kubernetes-fastAPI-project/actions/workflows/ci.yml/badge.svg)](https://github.com/MaxBarannikov/kubernetes-fastAPI-project/actions/workflows/ci.yml)
+[![CI](https://github.com/MaxBarannikov/kubernetes-fastapi-service/actions/workflows/ci.yml/badge.svg)](https://github.com/MaxBarannikov/kubernetes-fastapi-service/actions/workflows/ci.yml)
 ![Python 3.12+](https://img.shields.io/badge/Python-3.12%20%7C%203.13-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)
 ![uv](https://img.shields.io/badge/uv-managed-DE5FE9?logo=astral&logoColor=white)
