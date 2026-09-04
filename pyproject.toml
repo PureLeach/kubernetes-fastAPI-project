@@ -53,6 +53,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["storage_service"]
+exclude = ["storage_service/tests"]
 
 
 [tool.ruff]
@@ -88,6 +89,9 @@ select = [
     "PIE",           # flake8-pie
     "RSE",           # flake8-raise
     "PGH",           # pygrep-hooks
+    "PT",            # flake8-pytest-style
+    "SLF",           # flake8-self
+    "RUF",           # ruff-specific rules
     "D201", "D204", "D206", "D207", "D208", "D209", "D210",
     "D211", "D213", "D300", "D301", "D402", "D412", "D414",
 ]
@@ -103,7 +107,7 @@ ignore = [
 typing = "t"
 
 [tool.ruff.lint.mccabe]
-max-complexity = 25
+max-complexity = 10
 
 [tool.ruff.lint.per-file-ignores]
 "storage_service/tests/**/*.py" = [
@@ -125,19 +129,16 @@ warn_untyped_fields = true
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
-addopts = "-ra --strict-markers --cov=storage_service --cov-report=term-missing --cov-fail-under=85"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-ra --strict-markers --strict-config --cov=storage_service --cov-report=term-missing --cov-fail-under=95"
 testpaths = ["storage_service/tests"]
+filterwarnings = ["error"]
 
 
 [tool.coverage.run]
 branch = true
 source = ["storage_service"]
-omit = [
-    "storage_service/tests/*",
-    "storage_service/main.py",
-    "storage_service/tasks/run_scheduler.py",
-    "storage_service/settings/scheduler.py",
-]
+omit = ["storage_service/tests/*"]
 
 [tool.coverage.report]
 show_missing = true
@@ -145,5 +146,6 @@ skip_covered = false
 exclude_lines = [
     "pragma: no cover",
     "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
     "raise NotImplementedError",
 ]
