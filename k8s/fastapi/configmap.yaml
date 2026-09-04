@@ -1,0 +1,20 @@
+# Every setting here is non-sensitive. Credentials, if ever added, belong in a
+# Secret populated outside git (SealedSecrets, SOPS, External Secrets).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: storage-service-config
+  namespace: fastapi-storage-service
+  labels:
+    app.kubernetes.io/name: storage-service
+    app.kubernetes.io/instance: storage-service
+    app.kubernetes.io/part-of: storage-service
+data:
+  SERVER_HOST: "0.0.0.0"
+  SERVER_PORT: "8000"
+  SERVER_RELOAD: "False"
+  LOG_LEVEL_ROOT: "INFO"
+  ENABLE_METRICS: "True"
+  MAX_OBJECT_BYTES: "1048576"
+  OBJECTS_DATA_PATH: "/app/mnt/data.json"
+  SNAPSHOT_INTERVAL_SECONDS: "300"
